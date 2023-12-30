@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <string>
 
-CVector3d return_grid_pos(int i, int j, int k, double grid_size, CVector3d start_pos){
-    CVector3d diff = CVector3d(i*grid_size,j*grid_size,k*grid_size);
+CVector3d return_grid_pos(int i, int j, int k, double grid_length, CVector3d start_pos){
+    CVector3d diff = CVector3d(i*grid_length,j*grid_length,k*grid_length);
     return (diff+start_pos);
 }
 
@@ -52,12 +52,12 @@ double return_spherical_shell_distance(CVector3d pos, double outer_radius){
     return 0.0;
 }
 
-void compute_level_set_cube(double cube_length, double grid_size){
-    int x_num_times = ceil((cube_length/2.)/grid_size)*2+1;
-    int z_num_times = ceil((cube_length/2.)/grid_size)*2+1;
-    int y_num_times = ceil((cube_length/2.)/grid_size)*2+1;
+void compute_level_set_cube(double cube_length, double grid_length){
+    int x_num_times = ceil((cube_length/2.)/grid_length)*2+1;
+    int z_num_times = ceil((cube_length/2.)/grid_length)*2+1;
+    int y_num_times = ceil((cube_length/2.)/grid_length)*2+1;
         
-    double start = -(x_num_times-1)/2.*grid_size;
+    double start = -(x_num_times-1)/2.*grid_length;
     CVector3d start_pos = CVector3d(start, start, start);
 
     int x_num_dimension = x_num_times;
@@ -68,22 +68,22 @@ void compute_level_set_cube(double cube_length, double grid_size){
     file << x_num_dimension << std::endl;
     file << y_num_dimension << std::endl;
     file << z_num_dimension << std::endl;
-    file << grid_size << std::endl;
+    file << grid_length << std::endl;
     
     for(int k=0;k<z_num_dimension;k++)
         for(int j=0;j<y_num_dimension;j++)
             for(int i=0;i<x_num_dimension;i++){
-                CVector3d grid_pos = return_grid_pos(i,j,k,grid_size,start_pos);
+                CVector3d grid_pos = return_grid_pos(i,j,k,grid_length,start_pos);
                 double distance_val = return_cube_distance(grid_pos,cube_length);
                 file << distance_val << std::endl;
             }
     file.close();
 }
 
-void compute_level_set_sphere(double radius, double grid_size){
-    int num_times = ceil(radius/grid_size)+1;
-    CVector3d start_pos = CVector3d(-num_times*grid_size,-num_times*grid_size,
-        -num_times*grid_size);
+void compute_level_set_sphere(double radius, double grid_length){
+    int num_times = ceil(radius/grid_length)+1;
+    CVector3d start_pos = CVector3d(-num_times*grid_length,-num_times*grid_length,
+        -num_times*grid_length);
 
     int num_dimension = 2*num_times+1;
 
@@ -91,12 +91,12 @@ void compute_level_set_sphere(double radius, double grid_size){
     file << num_dimension << std::endl;
     file << num_dimension << std::endl;
     file << num_dimension << std::endl;
-    file << grid_size << std::endl;
+    file << grid_length << std::endl;
 
     for(int k=0;k<num_dimension;k++)
         for(int j=0;j<num_dimension;j++)
             for(int i=0;i<num_dimension;i++){
-                CVector3d grid_pos = return_grid_pos(i,j,k,grid_size,start_pos);
+                CVector3d grid_pos = return_grid_pos(i,j,k,grid_length,start_pos);
                 double distance_val = return_sphere_distance(grid_pos,radius);
                 file << distance_val << std::endl;
 
@@ -104,11 +104,11 @@ void compute_level_set_sphere(double radius, double grid_size){
     file.close();
 }
 
-void compute_level_set_torus(double radius, double grid_size){
+void compute_level_set_torus(double radius, double grid_length){
     double inner_radius = radius-0.5;
-    int num_times = ceil((radius+inner_radius)/grid_size)+1;
-    CVector3d start_pos = CVector3d(-num_times*grid_size,-num_times*grid_size,
-        -num_times*grid_size);
+    int num_times = ceil((radius+inner_radius)/grid_length)+1;
+    CVector3d start_pos = CVector3d(-num_times*grid_length,-num_times*grid_length,
+        -num_times*grid_length);
 
     int num_dimension = 2*num_times;
 
@@ -116,23 +116,23 @@ void compute_level_set_torus(double radius, double grid_size){
     file << num_dimension << std::endl;
     file << num_dimension << std::endl;
     file << num_dimension << std::endl;
-    file << grid_size << std::endl;
+    file << grid_length << std::endl;
 
     for(int k=0;k<num_dimension;k++)
         for(int j=0;j<num_dimension;j++)
             for(int i=0;i<num_dimension;i++){
-                CVector3d grid_pos = return_grid_pos(i,j,k,grid_size,start_pos);
+                CVector3d grid_pos = return_grid_pos(i,j,k,grid_length,start_pos);
                 double distance_val = return_torus_distance(grid_pos,radius);
                 file << distance_val << std::endl;
             }
     file.close();
 }
 
-void compute_level_set_spherical_shell(double radius, double grid_size){
+void compute_level_set_spherical_shell(double radius, double grid_length){
 
-    int num_times = ceil(radius/grid_size)+1; //radius plus one more grid point
-    CVector3d start_pos = CVector3d(-num_times*grid_size,-num_times*grid_size,
-        -num_times*grid_size);
+    int num_times = ceil(radius/grid_length)+1; //radius plus one more grid point
+    CVector3d start_pos = CVector3d(-num_times*grid_length,-num_times*grid_length,
+        -num_times*grid_length);
 
     int num_dimension = 2*num_times+1; //each half of grid plus axes
 
@@ -140,12 +140,12 @@ void compute_level_set_spherical_shell(double radius, double grid_size){
     file << num_dimension << std::endl;
     file << num_dimension << std::endl;
     file << num_dimension << std::endl;
-    file << grid_size << std::endl;
+    file << grid_length << std::endl;
 
     for(int k=0;k<num_dimension;k++)
         for(int j=0;j<num_dimension;j++)
             for(int i=0;i<num_dimension;i++){
-                CVector3d grid_pos = return_grid_pos(i,j,k,grid_size,start_pos);
+                CVector3d grid_pos = return_grid_pos(i,j,k,grid_length,start_pos);
                 double distance_val = return_spherical_shell_distance(grid_pos,radius);
                 file << distance_val << std::endl;
             }
@@ -156,37 +156,38 @@ int main(int argc, char* argv[]){
     grid_mesh g;
     g.m_grid_size = std::atof(argv[1]);
     g.m_grid_length = std::atof(argv[2]);
-    std::cout << "size " << g.m_grid_size << " length " << g.m_grid_length << std::endl;
+    std::cout << "model size: " << g.m_grid_size << std::endl;
+    std::cout << "grid length: " << g.m_grid_length << std::endl;
     
     std::string fname;
-    std::cout << "num of args " << argc << std::endl;
+    std::cout << "num of args (should be 5): " << argc << std::endl;
     
     if(argc > 3){
         g.model = *argv[3];
         if(*argv[3] == 'c'){
             std::cout << "cube model" << std::endl;
-            compute_level_set_cube(g.m_grid_length, g.m_grid_size);
+            compute_level_set_cube(g.m_grid_size, g.m_grid_length);
             fname = "levelset_cube";
         }
         else if(*argv[3] == 's'){
             std::cout << "sphere model" << std::endl;
-            compute_level_set_sphere(g.m_grid_length, g.m_grid_size); //radius 1st param
+            compute_level_set_sphere(g.m_grid_size, g.m_grid_length); //radius 1st param
             fname = "levelset_sphere";
         }
         else if (*argv[3] == 't'){
             std::cout << "torus model" << std::endl;
-            compute_level_set_torus(g.m_grid_length, g.m_grid_size);
+            compute_level_set_torus(g.m_grid_size, g.m_grid_length);
             fname = "levelset_torus";
         }
         else if (*argv[3] == 'l'){
             std::cout << "spherical shell model" << std::endl;
-            compute_level_set_spherical_shell(g.m_grid_length, g.m_grid_size);
+            compute_level_set_spherical_shell(g.m_grid_size, g.m_grid_length);
             fname = "levelset_spherical_shell";
         }
     }
     else{
         g.model = 'c';
-        compute_level_set_cube(g.m_grid_length, g.m_grid_size);
+        compute_level_set_cube(g.m_grid_size, g.m_grid_length);
         fname = "levelset_cube";
     }
     

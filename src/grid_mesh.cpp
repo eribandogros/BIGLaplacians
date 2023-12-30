@@ -13,10 +13,9 @@ void grid_mesh::read_level_set(std::string filename){
     file >> m_x_num_dimension;
     file >> m_y_num_dimension;
     file >> m_z_num_dimension;
-    file >> m_grid_size;
+    file >> m_grid_length;
 
-//    std::cout<<"grid dimension: "<<m_x_num_dimension<<' '<<m_y_num_dimension<<' '<<m_z_num_dimension<<std::endl;
-//    std::cout<<"grid length: "<<m_grid_length<<std::endl;
+    std::cout<<"grid dimensions: "<<m_x_num_dimension<<' '<<m_y_num_dimension<<' '<<m_z_num_dimension<<std::endl;
 
     m_grid_points = new float[m_x_num_dimension*m_y_num_dimension*m_z_num_dimension];
     
@@ -696,14 +695,14 @@ void grid_mesh::initial_mesh_edge_vertex_L0n(){
                         //L0n
                         if (tmp && !m_is_boundary_vertex[p1_index] && m_grid_points[p1_index] < 1e-12){
                             vertex_removal_n.push_back(p1_index);
-                            i_0n.push_back(edge_removal_n.size()-1.);  //new edge index
+                            i_0n.push_back(edge_removal_n.size()-1);  //new edge index
                             j_0n.push_back(p1_index);
                             k_0n.push_back(1.0);
                             m_star0_array[p1_index] = m_grid_length*m_grid_length*m_grid_length;
                         }
                         if (tmp && !m_is_boundary_vertex[p2_index] && m_grid_points[p2_index] < 1e-12){
                             vertex_removal_n.push_back(p2_index);
-                            i_0n.push_back(edge_removal_n.size()-1.);  //new edge index
+                            i_0n.push_back(edge_removal_n.size()-1);  //new edge index
                             j_0n.push_back(p2_index);
                             k_0n.push_back(-1.0);
                             m_star0_array[p2_index] = m_grid_length*m_grid_length*m_grid_length;
@@ -737,7 +736,7 @@ void grid_mesh::initial_mesh_edge_vertex_L0n(){
     
     //hs0 reindex
     m_num_vertices_new_n = vertex_removal_n.size();
-    std::cout << m_num_vertices_new_n << std::endl;
+    //std::cout << m_num_vertices_new_n << std::endl;
     m_star0_array_rm_n = new double[m_num_vertices_new_n];
     for(int i = 0; i < m_num_vertices_new_n; i++){
         m_star0_array_rm_n[i] = m_star0_array[vertex_removal_n[i]];
@@ -1289,7 +1288,7 @@ void grid_mesh::matlabEIGS(){
         mat->eval(u"[V3_Gn,D3_Gn]=eigs(L3_G, P3*(speye(size(my_s3,1))*(grid_length*grid_length)+speye(size(my_s3,1))*1e-12)*P3', 100, 'sm');");
     }
 
-//    std::cout << "Write eigenvalues to file" << std::endl;
+    std::cout << "Write eigenvalues to file" << std::endl;
 
     //L0n output
     if (option == '0'){
@@ -1370,6 +1369,10 @@ void grid_mesh::init(){
     m_estimated_num_edges = m_estimated_num_faces;
     m_num_grid_points = m_x_num_dimension*m_y_num_dimension*m_z_num_dimension;
 
+    std::cout << "num vertices: " << m_num_grid_points << std::endl;
+    std::cout << "num edges/faces: " << m_estimated_num_edges << std::endl;
+    std::cout << "num cells: " << m_estimated_num_cells << std::endl;
+    
     initial_mesh();
     
     matlabEIGS();
