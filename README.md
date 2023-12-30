@@ -1,23 +1,32 @@
+
+Code from "Combinatorial and Hodge Laplacians: Similarity and Difference." Computes the multidimensional combinatorial and Hodge Laplacians of the grid representation of an elementary volume with normal boundary conditions. Output is the smallest eigenvalues of both Laplacians.
+
+[arXiv:2204.12218](https://doi.org/10.48550/arXiv.2204.12218)
+
 Dependencies: Matlab
+
+Build and run the project using CMake.
 
 1. clone the repo
 
-2. create build folder
+2. create build folder within repo
 
-cd EulerianMesh3D
+`mkdir build`
+`cd build`
 
-mkdir build
+3. generate build files using cmake (example creates an Xcode project)
 
-3. generate build files using cmake (creates an Xcode project)
+`cmake -G Xcode ..`
 
-cmake -G Xcode EulerianMesh3D ..
+4. open Xcode project NormalEulerianMesh3D.xcodeproj
 
-4. open Xcode project EulerianMesh3D.xcodeproj
-
-5. change build target from ALL_BUILD to EulerianMesh3D in drop down menu next to run/stop buttons
+5. change build target from ALL_BUILD to NormalEulerianMesh3D in drop down menu next to run/stop buttons
 
 6. click Edit Scheme... in drop down menu
 
 7. add args in Run/Arguments
 
-The first arg is the length of the model, the second is the grid length, and the third is which model ('c' for cube, 's' for sphere and 't' for torus).
+- arg1, the length of the model (the distance of the outermost boundary from the origin)
+- arg2, grid length
+- arg3, model type ('c' for cube, 's' for sphere/ball, 't' for torus, 'l' for spherical shell).
+- arg4, dimension of Laplacian (0, 1, or 3)

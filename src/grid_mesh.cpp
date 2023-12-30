@@ -373,21 +373,18 @@ bool grid_mesh::is_face_included(int i,int j,int k,int type,bool &is_interior, d
 
     //if all vertices of the face are on the bdy or outside, return false (tmp in caller fn)
     if(val[0]>-1e-12 && val[1]>-1e-12 && val[2]>-1e-12 && val[3]>-1e-12){
-//        if(val[0]>=0 && val[1]>=0 && val[2]>=0 && val[3]>=0){ //L0t!!!
-//    if(val[0]>=0 || val[1]>=0 || val[2]>=0 || val[3]>=0){
         face_size = 0;
         return false;
     }
     //all inside
     if(val[0]<=1e-12 && val[1]<=1e-12 && val[2]<=1e-12 && val[3]<=1e-12){
-        num_np = 4; //rm
+        num_np = 4;
         face_size = m_grid_length*m_grid_length;
         return true;
     }
 
     //compute the primal face size
     face_size = compute_area_marching_square(val,num_np);
-//    std::cout << face_size << " ";
     if (face_size < 1e-12){
         face_size = 1e-12;
     }
@@ -699,14 +696,14 @@ void grid_mesh::initial_mesh_edge_vertex_L0n(){
                         //L0n
                         if (tmp && !m_is_boundary_vertex[p1_index] && m_grid_points[p1_index] < 1e-12){
                             vertex_removal_n.push_back(p1_index);
-                            i_0n.push_back(edge_removal_n.size()-1);  //new edge index
+                            i_0n.push_back(edge_removal_n.size()-1.);  //new edge index
                             j_0n.push_back(p1_index);
                             k_0n.push_back(1.0);
                             m_star0_array[p1_index] = m_grid_length*m_grid_length*m_grid_length;
                         }
                         if (tmp && !m_is_boundary_vertex[p2_index] && m_grid_points[p2_index] < 1e-12){
                             vertex_removal_n.push_back(p2_index);
-                            i_0n.push_back(edge_removal_n.size()-1);  //new edge index
+                            i_0n.push_back(edge_removal_n.size()-1.);  //new edge index
                             j_0n.push_back(p2_index);
                             k_0n.push_back(-1.0);
                             m_star0_array[p2_index] = m_grid_length*m_grid_length*m_grid_length;
@@ -728,7 +725,6 @@ void grid_mesh::initial_mesh_edge_vertex_L0n(){
     double k0n[num_entries_n-1];
     for(int i = 0; i < num_entries_n; i++){
         i0n[i] = i_0n[i]; //edge indices
-//        j0n[i] = j_0n[i]; //incorrect, need reindexed version
         k0n[i] = k_0n[i];
 
         //find new index in vertex_removal
@@ -821,22 +817,22 @@ void grid_mesh::matlabEIGS(){
     
     mat->setVariable(u"grid_length", std::move(mgl)); //switch to grid length
 
-    if (option == '0') {// || option == '1'){
-        //HS0 rm
+    if (option == '0') {
+        //HS0
         ad.push_back(m_num_vertices_new_n);
         ad.push_back(1);
         matlab::data::TypedArray<double> mstar0_array_rm
                 = factory.createArray(ad, m_star0_array_rm_n, m_star0_array_rm_n+m_num_vertices_new_n);
         ad.clear();
         
-        //HS1 rm
+        //HS1
         ad.push_back(m_num_edges_new_n);
         ad.push_back(1);
         matlab::data::TypedArray<double> mstar1_array_rm
                 = factory.createArray(ad, m_star1_array_rm, m_star1_array_rm+m_num_edges_new_n);
         ad.clear();
         
-        //D0 rm
+        //D0
         int numEld0 = 0;
         CMatrixElement* theElem;
         for(int i = 0; i < m_d0_normal_rm->numRows; i++){
